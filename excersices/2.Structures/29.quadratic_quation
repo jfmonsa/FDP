@@ -1,0 +1,59 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-intermediate-reader.ss" "lang")((modname |29.Ecuación cuadratica - ocultamiento con local, listas y estructuras|) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+;Definición de datos
+(define-struct cuadratica (a b c))
+;Representa una ecuación cuadratica de la forma ax^2+bx+c
+;Tiene las siguientes operaciones...
+;    (make-cuadratica ... ... ...) para crear la estructura
+;    (cuadratica-a ...) selectores
+
+(define ecuacion1 (make-cuadratica 1 4 2))
+(define ecuacion2 (make-cuadratica 2 -2 3))
+(define ecuacion3 (make-cuadratica 1 0 -4))
+
+
+;la estructura soluciiones
+(define-struct soluciones (x1 x2))
+;Representa las soluciones de la ecuación cuadratica
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;Contrato: solucacionCudaratica: cuadratica -> soluciones
+;proposito: calcular los ceros o las soluciones de una ecuación cuadratica
+;plantilla: (define (solucionCuadratica datos)
+;ejemplos:
+;      (solucionCuadratica ecuacion1) debe retornar (make-soluciones -0.59 -3.41)
+(define (solucionCuadratica datos)
+  (local
+    ;privada (Funciones auxiliares)
+    (
+     ;--------------------------------------------------------------------------
+     ;contrato: discriminante: cuadratica -> number
+     ;cuerpo: calcular el discriminante de una ecuación cuadratica
+     ;plantilla  (define (discriminante datos)...)
+     ;ejemplos
+     ;     (discriminante ecuacion1) debe retornar 8
+     ;cuerpo
+
+      (define (discriminante datos)
+      (- (sqr (cuadratica-b datos))
+         (* 4 (cuadratica-c datos) (cuadratica-a datos)))
+      )
+     )
+     ;--------------------------------------------------------------------------
+    ;publica (Fución principal)
+    ;(
+        (make-soluciones
+          (/ (+ (- (cuadratica-b datos)) (sqrt (discriminante datos))) (* 2 (cuadratica-a datos)))
+          (/ (- (- (cuadratica-b datos)) (sqrt (discriminante datos))) (* 2 (cuadratica-a datos)))
+         )
+       ;)
+     ) 
+ )
+;prueba
+(solucionCuadratica ecuacion1)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+

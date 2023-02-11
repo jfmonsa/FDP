@@ -1,0 +1,49 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-intermediate-reader.ss" "lang")((modname |39.Abstración de funciones - Ejemplo - Haciendo la función map|) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+;Dado una lista de numeros
+(define lista1 (list 23 54 76 28 73))
+;Se requiere una función para que la lista en mencion reotrne otra lista con los opuestos aditivos
+
+(define (opuestos lista)
+  (cond
+    [(empty? lista) empty]
+    [else (cons (- (first lista)) (opuestos (rest lista)))]
+    )
+  )
+;pruebas
+(opuestos lista1)
+;-------------------------------------------------------------------------------
+;Se requiere una función para que lista reotrne otra con los inversos
+
+(define (inversos lista)
+
+  (cond
+    [(empty? lista) empty]
+    [else (cons (/ 1 (first lista)) (inversos (rest lista)))]
+    )
+  )
+;pruebas
+(inversos lista1)
+;-------------------------------------------------------------------------------
+;Escriba una función que permita al usuario indicar cual de las funciones se aplicaría a la lista
+;Auxiliales
+;-> inverso
+(define (opuesto x)
+  (- x)
+  )
+(define (inverso x)
+  (/ 1 x)
+  )
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define (aplica f lista)
+  (cond
+    [(empty? lista) empty]
+    [else (cons (f (first lista)) (aplica f (rest lista)))]
+    )
+  )
+;Lo que hicimos fue reconstruir la función map
+;prueba
+(aplica opuesto lista1)

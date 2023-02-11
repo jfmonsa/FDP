@@ -1,0 +1,92 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname |14. Ejercicio complicado= Validación de una fecha|) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+;se trata de desarrollar una función que reciba una variable con un estructura
+;fecha. La función debe retornar true si se trata de una fecha valida es decir
+;que existio, exxiste o existira o false si la fecha no es correcta. por ejemplo
+;para la fecha 31/11/1994 debe retornar false; para la fecha 29/02/2036 true;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;1.Definicion de datos
+(define-struct fecha (dd mm aa))
+;Para la estructura fecha estaran disponiles;
+;(make-fecha <number> <number> <number>) constructor de la estructura fecha
+;(fecha-dd ...), (fecha-mm...) (fecha-aa ...) para selecionar los campos
+;(fecha? variable) Para determinar si la variable es de tipo fecha
+(define f1(make-fecha 31 11 1994))
+(define f2(make-fecha 29 2 2036))
+(define f3(make-fecha 31 12 2015))
+
+;Funciones auxiliares que utilizaremos en la principal:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;1.contrato: validaMes: número -> boolean
+;2.proposito: Verficar si un mes es valido o no
+;3.estructura: (define (validaMes mes)... )
+;4.ejemplos:
+;    (validaMes 8) debe retornar true
+;    (validaMes 15) debe retornar false
+;5.Cuerpo:
+(define (validaMes mes)
+  (cond
+    [(or(< mes 1) (> mes 12)) false]
+    [else true]
+    )
+  )
+;6.pruebas
+(check-expect (validaMes 8) true)
+(check-expect (validaMes 15) false)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;1.Contrato validaDia: numero numero -> boolean
+;2.Proposito: Validar si el número de dias es correcto segun el maximo dado.
+;3.plantilla: (define (validaDia dia max) ...)
+;4.ejemplos
+;       (validaDia 30 29) debe retornar false
+;        (validaDia 12 30) debe retornar true
+;5.Cuerpo
+(define (validaDia dia max)
+  (cond
+    [(> dia max) false]
+    [else true]
+    )
+  )
+;6.Prueba
+(check-expect (validaDia 30 29) false)
+(check-expect (validaDia 15 30) true)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;contrato: validarFecha: fecha (estructura) -> boolean
+;proposito: Validar si una fecha es valida si existe, existio o existira
+;plantilla (define (validarFecha fecha)...)
+;ejemplos
+;     (validarFecha f1) debe retornar false
+;     (validarFecha f2) debe retornar true
+;     (validarFecha f1) debe retornar true
+;cuerpo
+(define (validarFecha fec)
+  (cond [(not (fecha? fec)) false]
+        [else
+         (cond
+           [(not (validaMes (fecha-mm fec))) false]
+           [else
+            (cond
+              [(and (= (fecha-mm fec) 2) (= (remainder (fecha-aa fec) 4) 0))
+               (validaDia (fecha-dd fec) 29)
+               ]
+              [(= (fecha-mm fec) 2) (validaDia (fecha-dd fec) 28)]
+              [(or (= (fecha-mm fec) 4)
+                   (= (fecha-mm fec) 6)
+                   (= (fecha-mm fec) 9)
+                   (= (fecha-mm fec) 11)
+                   )(validaDia (fecha-dd fec) 30)]
+              [else (validaDia (fecha-dd fec) 31)]
+              )
+           ])
+         ]
+        ) 
+    )
+;Pruebas
+(check-expect (validarFecha f1) false)
+(check-expect (validarFecha f2) true)
+(check-expect (validarFecha f3) true)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
